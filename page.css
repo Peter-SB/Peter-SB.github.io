@@ -8,6 +8,7 @@ ul {
 
 li {
   float: left;
+  border-right:1px solid #bbb;
 }
 
 li a, .dropbtn {
