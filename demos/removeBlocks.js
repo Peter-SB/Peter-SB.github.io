@@ -1,3 +1,5 @@
+/* global document, window */
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let raf;
@@ -12,19 +14,18 @@ let drawList = [];
 //
 
 class Shape {
-  constructor(x, y, colour){
+  constructor(x, y, colour) {
     this.x = x;
     this.y = y;
     this.colour = colour;
-    console.log(x)
   }
 }
 
 class Box extends Shape {
-  constructor(x, y, height, width, colour = 'rgb(0,0,0)'){
+  constructor(x, y, height, width, colour = 'rgb(0,0,0)') {
     super(x, y, colour);
     this.height = height;
-    this.width = width ;
+    this.width = width;
   }
 
   draw() {
@@ -32,12 +33,11 @@ class Box extends Shape {
     ctx.fillRect(this.x, this.y, this.width, this.height);
     ctx.fillStyle = 'rgb(0,0,0)';
     ctx.strokeRect(this.x, this.y, this.width, this.height);
-
   }
 
   // Finds out if mouse is within box boundaries
-  inBoundary(mouseCoordinates){
-    if (this.x <= mouseCoordinates.x && this.y<=mouseCoordinates.y) {
+  inBoundary(mouseCoordinates) {
+    if (this.x <= mouseCoordinates.x && this.y <= mouseCoordinates.y) {
       const boxEdgeX = this.x + this.width;
       const boxEdgeY = this.y + this.height;
       if (mouseCoordinates.x <= boxEdgeX && mouseCoordinates.y <= boxEdgeY) {
@@ -57,16 +57,15 @@ class Box extends Shape {
 //
 
 function generateWorld() {
-    for (let i = 0; i < 1000; i++) {
-        var minx = 0;
-        var maxx = ctx.canvas.width - 100;
-        var randomx = Math.floor(Math.random() * (+maxx - +minx)) + +minx;
-        var miny = 0;
-        var maxy = ctx.canvas.height - 100;
-        var randomy = Math.floor(Math.random() * (+maxy - +miny)) + +miny;
-        drawList.push(new Box(randomx, randomy, 100, 100, `rgb(${100 * (i / 1500)},${255 * (i / 1500)},${100 * (i / 1500)}`));
-        console.log(`rgb(50*(${i / 1500}),200*(${i / 1500}),50*(${i / 1500})`);
-    }
+  for (let i = 0; i < 1000; i++) {
+    const minx = 0;
+    const maxx = ctx.canvas.width - 100;
+    const randomx = Math.floor(Math.random() * (+maxx - +minx)) + +minx;
+    const miny = 0;
+    const maxy = ctx.canvas.height - 100;
+    const randomy = Math.floor(Math.random() * (+maxy - +miny)) + +miny;
+    drawList.push(new Box(randomx, randomy, 100, 100, `rgb(${100 * (i / 1500)},${255 * (i / 1500)},${100 * (i / 1500)}`));
+  }
 }
 
 
@@ -75,7 +74,7 @@ function generateWorld() {
 //
 
 function draw() {
-  ctx.clearRect(0,0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawList.forEach((shape) => {
     shape.draw();
   });
@@ -83,13 +82,12 @@ function draw() {
   raf = window.requestAnimationFrame(draw);
 }
 
-ctx.canvas.width  = window.innerWidth-40;
-ctx.canvas.height = window.innerHeight-30;
+ctx.canvas.width = window.innerWidth - 40;
+ctx.canvas.height = window.innerHeight - 30;
 
 generateWorld();
 
 draw();
-
 
 
 //
@@ -99,7 +97,7 @@ function getMousePos(event) {
   const rect = canvas.getBoundingClientRect();
   return {
     x: event.clientX - rect.left,
-    y: event.clientY - rect.top
+    y: event.clientY - rect.top,
   };
 }
 
@@ -113,21 +111,20 @@ canvas.addEventListener('mouseout', () => {
 
 canvas.addEventListener('click', (event) => {
   let itemDeleted = false;
-  const tempDrawList = [...drawList]
-  tempDrawList.reverse().forEach((shape, index) =>{
-    if (!itemDeleted){
-      if (shape.inBoundary(getMousePos(event)) === true){
+  const tempDrawList = [...drawList];
+  tempDrawList.reverse().forEach((shape, index) => {
+    if (!itemDeleted) {
+      if (shape.inBoundary(getMousePos(event)) === true) {
         shape.delete();
-        tempDrawList.splice(index,1);
-        console.log('shape deleted');
+        tempDrawList.splice(index, 1);
         itemDeleted = true;
       }
     }
   });
 
-  drawList = [...tempDrawList.reverse()]
+  drawList = [...tempDrawList.reverse()];
 
-  /*if(!itemDeleted) {
+  /* if(!itemDeleted) {
     drawList.push(new Box(
       getMousePos(event).x-50,
       getMousePos(event).y-50,
@@ -135,37 +132,32 @@ canvas.addEventListener('click', (event) => {
       100,
       'rgb(50,200,50'
     ));
-  }*/
-})
+  } */
+});
 
 canvas.addEventListener('mousedown', () => {
-    mouseDown = true;
-})
+  mouseDown = true;
+});
 canvas.addEventListener('mouseup', () => {
-    mouseDown = false;
-})
+  mouseDown = false;
+});
 
 canvas.addEventListener('mousemove', (event) => {
-    
-    if ((counter >= 3 && mouseDown === true)) {
-        console.log('1');
-        counter = 0
+  if ((counter >= 3 && mouseDown === true)) {
+    counter = 0;
 
-        let itemDeleted = false;
-        const tempDrawList = [...drawList]
-        tempDrawList.reverse().forEach((shape, index) => {
-            if (!itemDeleted) {
-                if (shape.inBoundary(getMousePos(event)) === true) {
-                    shape.delete();
-                    tempDrawList.splice(index, 1);
-                    console.log('shape deleted');
-                    itemDeleted = true;
-                }
-            }
-        });
+    let itemDeleted = false;
+    const tempDrawList = [...drawList];
+    tempDrawList.reverse().forEach((shape, index) => {
+      if (!itemDeleted) {
+        if (shape.inBoundary(getMousePos(event)) === true) {
+          shape.delete();
+          tempDrawList.splice(index, 1);
+          itemDeleted = true;
+        }
+      }
+    });
 
-        drawList = [...tempDrawList.reverse()]
-    }
-
-
-})
+    drawList = [...tempDrawList.reverse()];
+  }
+});
