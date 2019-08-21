@@ -18,17 +18,18 @@ class Box {
     this.height = height;
     this.width = width;
     this.colour = colour;
-    this.growspeed = growSpeed;
+    this.growSpeed = growSpeed;
   }
 
   draw() {
+    console.log(this.width);
     this.doDrawCalculations();
     drawBoxFromCentre(this.x, this.y, this.width, this.height, this.colour);
   }
 
   doDrawCalculations() {
-    this.width = this.width ** (this.growSpeed);
-    this.height = this.height ** (this.growSpeed);
+    this.width = this.width ** (this.growSpeed)+1;
+    this.height = this.height ** (this.growSpeed)+1;
   }
 
   delete() {
@@ -55,8 +56,10 @@ function generateWorld() {
 
 function drawBoxFromCentre(offsetX, offsetY, width, height, colour) {
   ctx.fillStyle = colour;
+
   const x = ctx.canvas.width / 2 + offsetX - width / 2;
   const y = ctx.canvas.height / 2 + offsetY - height / 2;
+
   ctx.fillRect(x, y, width, height);
 }
 
@@ -65,21 +68,20 @@ function drawBoxFromCentre(offsetX, offsetY, width, height, colour) {
 //
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawList.forEach((drawItem) => {
+    drawItem.draw();
+  })
 
-  if (counter > 20) {
-    box.draw();
-    counter = 0;
-  }
-
-  counter += 1;
+  //counter += 1;
   raf = window.requestAnimationFrame(draw);
 }
 
 ctx.canvas.width = window.innerWidth - 40;
 ctx.canvas.height = window.innerHeight - 30;
 
-const box = new Box(0, 0, 1, 1, 1.1);
+const box = new Box(0, 0, 2, 2, 1.01);
+drawList.push(box);
+console.log('block made')
 
 draw();
 
