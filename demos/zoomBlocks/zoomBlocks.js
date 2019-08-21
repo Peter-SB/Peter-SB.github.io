@@ -12,11 +12,11 @@ let drawList = [];
 //
 
 class Box {
-  constructor(x, y, width, height, growSpeed, colour = 'rgb(0,0,0)'){
+  constructor(x, y, width, height, growSpeed, colour = 'rgb(0,0,0)') {
     this.x = x;
     this.y = y;
     this.height = height;
-    this.width = width ;
+    this.width = width;
     this.colour = colour;
     this.growspeed = growSpeed;
   }
@@ -27,8 +27,8 @@ class Box {
   }
 
   doDrawCalculations() {
-    this.width = this.width**(this.growSpeed);
-    this.height = this.height**(this.growSpeed);
+    this.width = this.width ** (this.growSpeed);
+    this.height = this.height ** (this.growSpeed);
   }
 
   delete() {
@@ -41,22 +41,22 @@ class Box {
 //
 
 function generateWorld() {
-    for (let i = 0; i < 1000; i++) {
-        var minx = 0;
-        var maxx = ctx.canvas.width - 100;
-        var randomx = Math.floor(Math.random() * (+maxx - +minx)) + +minx;
-        var miny = 0;
-        var maxy = ctx.canvas.height - 100;
-        var randomy = Math.floor(Math.random() * (+maxy - +miny)) + +miny;
-        drawList.push(new Box(randomx, randomy, 100, 100, `rgb(${100 * (i / 1500)},${255 * (i / 1500)},${100 * (i / 1500)}`));
-        console.log(`rgb(50*(${i / 1500}),200*(${i / 1500}),50*(${i / 1500})`);
-    }
+  for (let i = 0; i < 1000; i++) {
+    let minx = 0;
+    let maxx = ctx.canvas.width - 100;
+    let randomx = Math.floor(Math.random() * (+maxx - +minx)) + +minx;
+    let miny = 0;
+    let maxy = ctx.canvas.height - 100;
+    let randomy = Math.floor(Math.random() * (+maxy - +miny)) + +miny;
+    drawList.push(new Box(randomx, randomy, 100, 100, `rgb(${100 * (i / 1500)},${255 * (i / 1500)},${100 * (i / 1500)}`));
+    console.log(`rgb(50*(${i / 1500}),200*(${i / 1500}),50*(${i / 1500})`);
+  }
 }
 
 function drawBoxFromCentre(offsetX, offsetY, width, height, colour) {
   ctx.fillStyle = colour;
-  x = ctx.canvas.width/2 + offsetX - width/2;
-  y = ctx.canvas.height/2 + offsetY - height/2;
+  const x = ctx.canvas.width / 2 + offsetX - width / 2;
+  const y = ctx.canvas.height / 2 + offsetY - height / 2;
   ctx.fillRect(x, y, width, height);
 }
 
@@ -65,9 +65,9 @@ function drawBoxFromCentre(offsetX, offsetY, width, height, colour) {
 //
 
 function draw() {
-  ctx.clearRect(0,0, canvas.width, canvas.height);
-  
-  if (counter > 20){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (counter > 20) {
     box.draw();
     counter = 0;
   }
@@ -76,13 +76,12 @@ function draw() {
   raf = window.requestAnimationFrame(draw);
 }
 
-ctx.canvas.width  = window.innerWidth-40;
-ctx.canvas.height = window.innerHeight-30;
+ctx.canvas.width = window.innerWidth - 40;
+ctx.canvas.height = window.innerHeight - 30;
 
-const box = new Box(0 ,0, 1, 1, 1.1);
+const box = new Box(0, 0, 1, 1, 1.1);
 
 draw();
-
 
 
 //
@@ -92,7 +91,7 @@ function getMousePos(event) {
   const rect = canvas.getBoundingClientRect();
   return {
     x: event.clientX - rect.left,
-    y: event.clientY - rect.top
+    y: event.clientY - rect.top,
   };
 }
 
@@ -106,19 +105,19 @@ canvas.addEventListener('mouseout', () => {
 
 canvas.addEventListener('click', (event) => {
   let itemDeleted = false;
-  const tempDrawList = [...drawList]
-  tempDrawList.reverse().forEach((shape, index) =>{
-    if (!itemDeleted){
-      if (shape.inBoundary(getMousePos(event)) === true){
+  const tempDrawList = [...drawList];
+  tempDrawList.reverse().forEach((shape, index) => {
+    if (!itemDeleted) {
+      if (shape.inBoundary(getMousePos(event)) === true) {
         shape.delete();
-        tempDrawList.splice(index,1);
+        tempDrawList.splice(index, 1);
         console.log('shape deleted');
         itemDeleted = true;
       }
     }
   });
 
-  drawList = [...tempDrawList.reverse()]
+  drawList = [...tempDrawList.reverse()];
 
   /*if(!itemDeleted) {
     drawList.push(new Box(
@@ -128,37 +127,34 @@ canvas.addEventListener('click', (event) => {
       100,
       'rgb(50,200,50'
     ));
-  }*/
-})
+  } */
+});
 
 canvas.addEventListener('mousedown', () => {
-    mouseDown = true;
-})
+  mouseDown = true;
+});
 canvas.addEventListener('mouseup', () => {
-    mouseDown = false;
-})
+  mouseDown = false;
+});
 
 canvas.addEventListener('mousemove', (event) => {
-    
-    if ((counter >= 3 && mouseDown === true)) {
-        console.log('1');
-        counter = 0
+  if ((counter >= 3 && mouseDown === true)) {
+    console.log('1');
+    counter = 0;
 
-        let itemDeleted = false;
-        const tempDrawList = [...drawList]
-        tempDrawList.reverse().forEach((shape, index) => {
-            if (!itemDeleted) {
-                if (shape.inBoundary(getMousePos(event)) === true) {
-                    shape.delete();
-                    tempDrawList.splice(index, 1);
-                    console.log('shape deleted');
-                    itemDeleted = true;
-                }
-            }
-        });
+    let itemDeleted = false;
+    const tempDrawList = [...drawList];
+    tempDrawList.reverse().forEach((shape, index) => {
+      if (!itemDeleted) {
+        if (shape.inBoundary(getMousePos(event)) === true) {
+          shape.delete();
+          tempDrawList.splice(index, 1);
+          console.log('shape deleted');
+          itemDeleted = true;
+        }
+      }
+    });
 
-        drawList = [...tempDrawList.reverse()]
-    }
-
-
-})
+    drawList = [...tempDrawList.reverse()];
+  }
+});
