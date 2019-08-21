@@ -5,6 +5,8 @@ let raf;
 let mouseDown = false;
 let counter = 0;
 
+let noNewBox = true;
+
 let drawList = [];
 
 //
@@ -22,14 +24,27 @@ class Box {
   }
 
   draw() {
-    console.log(this.width);
     this.doDrawCalculations();
     drawBoxFromCentre(this.x, this.y, this.width, this.height, this.colour);
+    this.removeIfBiggerThanScreen();
   }
 
   doDrawCalculations() {
     this.width = this.width ** (this.growSpeed)+1;
     this.height = this.height ** (this.growSpeed)+1;
+  }
+
+  removeIfBiggerThanScreen() {
+    const wider = this.width > ctx.canvas.width;
+    const heigher = this.height > ctx.canvas.height;
+
+    if( wider && heigher ) {
+      const index = drawList.indexOf(this);
+      drawList.splice(index, 1);
+      const colour = getRandomColor();
+      const box = new Box(0, 0, 2, 2, 1.01, colour);
+      drawList.push(box);
+    }
   }
 
   delete() {
@@ -63,6 +78,15 @@ function drawBoxFromCentre(offsetX, offsetY, width, height, colour) {
   ctx.fillRect(x, y, width, height);
 }
 
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 //
 // Main draw function
 //
@@ -72,16 +96,21 @@ function draw() {
     drawItem.draw();
   })
 
-  //counter += 1;
+  if (counter > 30 && noNewBox) {
+    drawList.push(new Box(0, 0, 2, 2, 1.01, getRandomColor()));
+    noNewBox = false;
+  }
+
+  counter += 1;
   raf = window.requestAnimationFrame(draw);
 }
 
 ctx.canvas.width = window.innerWidth - 40;
 ctx.canvas.height = window.innerHeight - 30;
 
-const box = new Box(0, 0, 2, 2, 1.01);
-drawList.push(box);
-console.log('block made')
+
+drawList.push(new Box(0, 0, 2, 2, 1.01, getRandomColor()));
+
 
 draw();
 
